@@ -18,12 +18,17 @@ class NotificationTransformer extends JsonResource
             'icon'=>!empty($this->icon_class)?$this->icon_class:'far fa-bell',
             'link'=>$this->when($this->link, $this->link),
             'recipient'=>$this->when($this->recipient, $this->recipient),
-            'options'=>$this->when($this->options, $this->options),
+            'recipientUser'=> new UserTransformer($this->whenLoaded('recipientUser')),
+            'source'=>$this->when($this->source, $this->source),
+            'options'=>$this->options,
             'isRead'=>$this->is_read,
             'timeAgo'=>$this->when($this->timeAgo,$this->timeAgo),
             'createdAt'=>$this->when($this->created_at,$this->created_at),
             'updatedAt'=>$this->when($this->updated_at,$this->updated_at),
+            'user_id'=>$this->when($this->user_id,$this->user_id),
             'user'=>new UserTransformer($this->whenLoaded('user')),
+            'mediaFiles' => $this->mediaFiles(),
+            'sourceData' => $this->sourceData,
         ];
 
         return $data;

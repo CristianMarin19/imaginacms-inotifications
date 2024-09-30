@@ -6,7 +6,8 @@ return [
     "adminConfig" => [
       "title" => "Configuración",
       "headerTitle" => "Configuración de notificaciones"
-    ]
+    ],
+    "adminPanel" => "Notifications"
   ],
   "title" => 'Multimedia Listar/Buscar',
   "newFile" => 'Nuevo Archivo',
@@ -20,11 +21,15 @@ return [
   "editFile" => 'Editar Archivo',
   "moveMedia" => 'Mover Media',
   "selectMedia" => 'Seleccionar Media',
+  "newNotification" => "Nueva Notificación",
   "form" => [
     "altAttribute" => 'Attributo Alt',
     "keyWords" => 'Palabras Claves',
     "folderName" => 'Nombre de la carpeta',
     "moveTo" => 'Mover a',
+  ],
+  "label" => [
+    "message" => "Mensaje",
   ],
   "messages" => [
     "addYourFiles" => 'Agrega tus archivos aquí',
@@ -36,5 +41,18 @@ return [
     "providers" => "Con el modulo de notificaciones puedes enviar diferentes tipos de mensajes para algunas acciones
     de la aplicación como notificar una nueva orden de compra de la tienda por correo, es necesario configurar
     los proveedores que permiten notificar."
-  ]
+  ],
+  "helpTextBroadcastOption" => "Está notificación se mostrara dentro de la APP",
+  "isImportant" => "BroadCast (Importante)",
+  "isImportantHelpText" => "Está notificación se mostrara en un popup más visible en el centro de la APP",
+  "markAsRead" => "Marcar como leida",
+  "markAllAsRead" => "Marcar como leidas",
+  "tab" => [
+    "all" => "Todas",
+    "unread" => "Sin leer",
+    "read" => "Leidas"
+  ],
+  "type" => "Tipo",
+  "cancel" => "Cancelar",
+  "openLink" => "Abrir enlace"
 ];

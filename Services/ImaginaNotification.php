@@ -102,22 +102,24 @@ final class ImaginaNotification implements Inotification
     // if provider its not defined
     if (!isset($this->provider->id)) {
 
-      \Log::info($this->log.'Push|provider its not defined');
+      //\Log::info($this->log.'Push|Provider: Not defined');
 
       // if the type of notification it's defined
       if ($this->type) {
+        //\Log::info($this->log.'Push|Notification Type: Defined');
 
         // the type of notification may be an array of strings for multiples notifications
         if (!is_array($this->type)) $this->type = [$this->type];
 
         foreach ($this->type as $type) {
           $this->provider = $this->providerRepository->getItem($type, (object)["include" => [], "filter" => (object)["field" => "type", "default" => 1]]);
-
           if (isset($this->provider->id) && $this->provider->status) {
             $this->send();
           }
         }
       } else {
+
+        //\Log::info($this->log.'Push|Notification Type: No Defined');
         // if the provider and type is not defined, the $recipient can defined the type for notification
         // like ["push" => $user->id,"email" => $user->email]
         if (is_array($this->recipient)) {
@@ -191,19 +193,24 @@ final class ImaginaNotification implements Inotification
     $providersConfig = collect(config("asgard.notification.config.providers"));
     $providersConfig = $providersConfig->keyBy("systemName");
     $this->providerConfig = $providersConfig[$this->provider->system_name];
-
+    
     $valid = true;
     if (isset($this->providerConfig["rules"])) {
       $result = Validator::make(["recipient" => $recipient], ["recipient" => $this->providerConfig["rules"]]);
       if ($result->fails()) {
+        //$errors = $result->errors(); dd($errors);
         $valid = false;
       }
     }
+
+    //\Log::info($this->log.'validateRecipient: '.$valid);
+
     return $valid;
   }
 
   private function send()
   {
+    //\Log::info($this->log.'Send|');
 
     //validating $recipient with rules defined in the config of the provider
     $valid = $this->validateRecipient($this->recipient);
@@ -232,17 +239,26 @@ final class ImaginaNotification implements Inotification
 
   private function create()
   {
-    $this->notification = $this->notificationRepository->create([
+
+    $dataToSave = [
       'recipient' => $this->recipient ?? $this->auth->id(),
       'icon_class' => $this->data["icon"] ?? '',
       'type' => $this->provider->type ?? $this->type ?? '',
       'provider' => $this->provider->system_name ?? '',
-      'link' => $this->data["link"] ?? url(''),
+      'link' => $this->data["link"] ?? null,
       'title' => $this->data["title"] ?? '',
       'message' => $this->data["message"] ?? '',
       'options' => $this->data["options"] ?? '',
       'is_action' => $this->data["isAction"] ?? false,
-    ]);
+      'user_id' => $this->data['user_id'] ?? null,
+      'source' => $this->data['source'] ?? null 
+    ];
+
+    //Validation Media
+    if(isset($this->data['medias_single'])) $dataToSave['medias_single'] = $this->data['medias_single'];
+
+    //Save Notification
+    $this->notification = $this->notificationRepository->create($dataToSave);
 
   }
 
@@ -269,7 +285,12 @@ final class ImaginaNotification implements Inotification
 
   private function email()
   {
+    
     try {
+
+      //Add entity data to email
+      $this->data['notification'] = $this->notification;
+
       // subject like notification title
       $subject = $this->data["title"] ?? '';
 
